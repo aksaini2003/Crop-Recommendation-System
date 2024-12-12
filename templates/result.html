@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation Result</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #4CAF50;
+            --secondary-green: #81C784;
+            --background-color: #F0F4F8;
+            --text-color: #2C3E50;
+            --card-background: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-color: var(--background-color);
+        }
+
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .result-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .result-container {
+            background: var(--card-background);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .crop-image {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .crop-image:hover {
+            transform: scale(1.05);
+        }
+
+        .crop-name {
+            color: var(--primary-green);
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .crop-name i {
+            margin-right: 15px;
+            color: var(--secondary-green);
+        }
+
+        .recommendation-text {
+            color: var(--text-color);
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .crop-details {
+            display: flex;
+            justify-content: space-around;
+            background-color: #F9FAFB;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .crop-detail {
+            text-align: center;
+            flex: 1;
+        }
+
+        .crop-detail i {
+            color: var(--primary-green);
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .crop-detail p {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .back-btn {
+            display: inline-block;
+            background-color: var(--primary-green);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            max-width: 300px;
+        }
+
+        .back-btn:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .back-btn i {
+            margin-left: 10px;
+        }
+
+        .app-footer {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 20px 0;
+            flex-shrink: 0;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 0 15px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .footer-logo i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .footer-links {
+            text-align: right;
+        }
+
+        .footer-social {
+            margin-bottom: 10px;
+        }
+
+        .social-link {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .social-link:hover {
+            color: var(--secondary-green);
+        }
+
+        .footer-tech {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .footer-copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 600px) {
+            .result-container {
+                padding: 20px;
+                margin: 0 10px;
+            }
+
+            .crop-details {
+                flex-direction: column;
+            }
+
+            .crop-detail {
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                text-align: center;
+                margin-top: 15px;
+            }
+
+            .social-link {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="result-wrapper">
+            {% if prediction %}
+            <div class="result-container">
+                <img src="{{ url_for('static', filename='crop_images/' + crop_image) }}" alt="{{ prediction }} Crop" class="crop-image">
+                
+                <h1 class="crop-name">
+                    <i class="fas fa-leaf"></i>
+                    {{ prediction }}
+                </h1>
+
+                <p class="recommendation-text">
+                    Based on the soil and environmental conditions you provided, 
+                    we recommend growing <strong>{{ prediction }}</strong> as your crop.
+                </p>
+
+                <div class="crop-details">
+                    <div class="crop-detail">
+                        <i class="fas fa-sun"></i>
+                        <p>Suitable Climate</p>
+                    </div>
+                    <div class="crop-detail">
+                        <i class="fas fa-tint"></i>
+                        <p>Water Efficient</p>
+                    </div>
+                    <div class="crop-detail">
+                        <i class="fas fa-chart-line"></i>
+                        <p>High Yield</p>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('home') }}" class="back-btn">
+                    Try Another Prediction <i class="fas fa-redo"></i>
+                </a>
+            </div>
+            {% endif %}
+
+            {% if not prediction %}
+            <div class="result-container">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Oops! Recommendation Failed</h2>
+                <p>We couldn't generate a crop recommendation. Please check your input values.</p>
+                <a href="{{ url_for('index') }}" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Try Again
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-seedling"></i>
+                    <span>Crop Recommendation System</span>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-social">
+                        <a href="https://www.linkedin.com/in/aashish-kumar-saini-03946b296/" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </a>
+                        <a href="https://github.com/aksaini2003" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                    <p class="footer-tech">
+                        <i class="fas fa-code"></i>Built with HTML, CSS, Python, Flask, and scikit-learn
+                    </p>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2024 Agricultural Intelligence. All Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

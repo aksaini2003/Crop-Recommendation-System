@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Brown ground -->
+  <rect x="0" y="24" width="32" height="8" fill="#8B4513"/>
+  
+  <!-- Green wheat/crop stalks -->
+  <path d="M16 10 L14 24 L18 24 Z" fill="#228B22"/>
+  <path d="M12 12 L10 24 L14 24 Z" fill="#32CD32"/>
+  <path d="M20 12 L22 24 L18 24 Z" fill="#32CD32"/>
+</svg>

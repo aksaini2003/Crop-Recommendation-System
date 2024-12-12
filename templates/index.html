@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation System</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #4CAF50;
+            --secondary-green: #81C784;
+            --background-color: #F0F4F8;
+            --text-color: #2C3E50;
+            --card-background: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-color: var(--background-color);
+        }
+
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-background);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--primary-green);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header h1 i {
+            margin-right: 15px;
+            color: var(--secondary-green);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #F9FAFB;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+
+        .form-control::placeholder {
+            color: #A0A0A0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .submit-btn i {
+            margin-left: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 0 10px;
+            }
+        }
+
+        .app-footer {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 20px 0;
+            flex-shrink: 0;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 0 15px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .footer-logo i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .footer-links {
+            text-align: right;
+        }
+
+        .footer-social {
+            margin-bottom: 10px;
+        }
+
+        .social-link {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .social-link:hover {
+            color: var(--secondary-green);
+        }
+
+        .footer-tech {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .footer-copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                text-align: center;
+                margin-top: 15px;
+            }
+
+            .social-link {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="container-wrapper">
+            <div class="container">
+                <div class="header">
+                    <h1><i class="fas fa-seedling"></i>Crop Recommendation</h1>
+                    <p>Discover the best crop for your agricultural conditions</p>
+                </div>
+                <form action="{{ url_for('predict') }}" method="post" id="cropForm">
+                    <div class="form-group">
+                        <label for="nitrogen">Nitrogen (N) Level</label>
+                        <input name="nitrogen" type="number" class="form-control" id="nitrogen" placeholder="Enter nitrogen level" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="phosphorus">Phosphorus (P) Level</label>
+                        <input name="phosphorus" type="number" class="form-control" id="phosphorus" placeholder="Enter phosphorus level" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="potassium">Potassium (K) Level</label>
+                        <input name="potassium" type="number" class="form-control" id="potassium" placeholder="Enter potassium level" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="temperature">Temperature (°C)</label>
+                        <input name="temperature" type="number" class="form-control" id="temperature" placeholder="Enter temperature" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="humidity">Humidity (%)</label>
+                        <input name="humidity" type="number" class="form-control" id="humidity" placeholder="Enter humidity" step="0.1" required min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="ph">Soil pH Level</label>
+                        <input name="ph" type="number" step="0.1" class="form-control" id="ph" placeholder="Enter soil pH" required min="0" max="14">
+                    </div>
+                    <div class="form-group">
+                        <label for="rainfall">Rainfall (mm)</label>
+                        <input name="rainfall" type="number" step="0.1" class="form-control" id="rainfall" placeholder="Enter annual rainfall" required min="0">
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        Get Crop Recommendation <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('cropForm').addEventListener('submit', function(e) {
+                // Optional: Add form validation or loading animation
+                console.log('Form submitted');
+            });
+        </script>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-seedling"></i>
+                    <span>Crop Recommendation System</span>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-social">
+                        <a href="https://www.linkedin.com/in/aashish-kumar-saini-03946b296/" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </a>
+                        <a href="https://github.com/aksaini2003" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                    <p class="footer-tech">
+                        <i class="fas fa-code"></i> Built with HTML, CSS, Python, Flask, and scikit-learn
+                    </p>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2024 Agricultural Intelligence. All Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
